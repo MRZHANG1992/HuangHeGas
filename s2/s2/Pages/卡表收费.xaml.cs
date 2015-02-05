@@ -20,6 +20,7 @@ namespace Com.Aote.Pages
         public 卡表收费()
         {
             InitializeComponent();
+           
         }
         string userid = "";
         private void NewGeneralICCard_Completed(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
@@ -205,6 +206,13 @@ namespace Com.Aote.Pages
             else{
                 myPopup.IsOpen = false;
             }
+        }
+
+      
+
+        private void fapiaoNum1_TextChanged(object sender, TextChangedEventArgs e)
+        {
+           // FapiaoNum.Text =  (int.Parse(fapiaoNum1.Text)).ToString("D8");
         }
 
 

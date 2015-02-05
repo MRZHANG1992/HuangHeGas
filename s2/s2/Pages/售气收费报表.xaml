@@ -15,11 +15,12 @@
     xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
 	xmlns:System="clr-namespace:System;assembly=mscorlib"
 	mc:Ignorable="d" FontSize="13"
-	x:Class="Com.Aote.Pages.售气收费信息">
+	x:Class="Com.Aote.Pages.售气收费报表">
 
     <Grid x:Name="LayoutRoot">
         <m:ResourceLoad Margin="0,0,-12,0">
-            <o:ExcelObj Name="excel" Bind="Index,f_userid,f_username,f_districtname,f_apartment,f_usertype,f_cardid,f_gaswatchbrand,f_gaspricetype,f_gasprice,f_pregas,f_preamount,f_beginfee,f_endfee,f_amountmaintenance,f_totalcost,f_comtype,f_invoicenum,f_payfeevalid,f_payfeetype,f_filiale,f_sgnetwork,f_sgoperator,f_deliverydate" Source="{m:Exp Str=daninfos}"/>
+
+
             <!--操作员列表对象-->
             <o:ObjectList Name="czylist" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='操作员查询用'  order by id"/>
             <o:ObjectList Name="czylistnull" EntityType="paramvalue" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='操作员查询用' " HasEmptyRow="True"/>
@@ -37,6 +38,9 @@
             <!--用户类型查询用-->
             <o:ObjectList Name="usertypelist" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='用户类型查询用' order by id"/>
             <o:ObjectList Name="usertypelistnull" EntityType="paramvalue" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='用户类型查询用' " HasEmptyRow="True"/>
+            <!--用气类型查询用-->
+            <o:ObjectList Name="f_gaspropertieslist" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='用气类型查询用' order by id"/>
+            <o:ObjectList Name="f_gaspropertieslistnull" EntityType="paramvalue" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='用气类型查询用' " HasEmptyRow="True"/>
             <!--付款方式-->
             <o:ObjectList Name="fukuanfangshi" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='付款方式' order by id"/>
             <o:ObjectList Name="fukuanfangshinull" EntityType="paramvalue" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='付款方式' " HasEmptyRow="True"/>
@@ -58,13 +62,14 @@
             <o:ObjectList Name="youxiaolistnull" EntityType="paramvalue" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='是否有效查询用' " HasEmptyRow="True"/>
             <o:ObjectList Name="yinhanglist1" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='银行名'"/>
             <o:ObjectList Name="yinhanglistnull" EntityType="paramvalue" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='银行名' " HasEmptyRow="True"/>
+           
         </m:ResourceLoad>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10*"/>
                 <ColumnDefinition Width="0*"/>
             </Grid.ColumnDefinitions>
-            <c:BusyIndicatorEx BusyContent="正在查询，请稍等" IsBusy="{m:Exp Str=daninfos.ItemsSource.IsBusy or toExcel.IsBusy}">
+            <c:BusyIndicatorEx BusyContent="正在查询，请稍等" IsBusy="{m:Exp Str=daninfos.ItemsSource.IsBusy}">
                 <toolkit:DockPanel>
                     <Grid x:Name="daninfosearch"  toolkit:DockPanel.Dock="Top" Margin="0,0,0,3" Background="#FFCFEFFF" Width="Auto" HorizontalAlignment="Stretch" >
                         <Grid.RowDefinitions>
@@ -112,20 +117,12 @@
                                 <o:PropertySetter PropertyName="f_filiale"  Operator="f_filiale like 'this%'"/>
                             </a:Data.Prop>
                         </ComboBox>
-                        <Button Content=" 查  询" x:Name="dansearchbutton" Grid.Row="3" Grid.Column="6" Click="{m:Exp Str=daninfosearch.DataContext.Search()}" Margin="20,0,0,0" FontSize="14"  />
-                        <StackPanel Grid.Row="3" Grid.Column="7" Orientation="Horizontal">
-                            <Button Content=" 置  空"  Click="{m:Exp Str=daninfosearch.DataContext.f_userid\=null;daninfosearch.DataContext.f_cardid\=null;daninfosearch.DataContext.f_username\=null;daninfosearch.DataContext.f_yytdate1\=null;daninfosearch.DataContext.f_yytdate2\=null;tj5.SelectedValue\=null;tj6.SelectedValue\=null;tj9.SelectedValue\=null;tja.SelectedValue\=null;tjb.SelectedValue\=null;tjc.SelectedValue\=null;tjwangdian.SelectedValue\=null;tjczy.SelectedValue\=null;tjczy_Copy.SelectedValue\=null;daninfosearch.DataContext.startinvoicenum\=null;daninfosearch.DataContext.endinvoicenum\=null;daninfosearch.DataContext.f_districtname\=null;tjc_Copy.SelectedValue\=null}" FontSize="14" HorizontalAlignment="Left" Width="60" />
+                       
+                        <StackPanel Grid.Row="3" Grid.Column="8" Orientation="Horizontal" Margin="47,1,-139,0">
+                            <Button Content=" 查  询" x:Name="dansearchbutton" Click="{m:Exp Str=daninfosearch.DataContext.Search()}" Margin="0,0,0,0" FontSize="14"  />
                             <Button Content="打印" Click="{m:Exp Str=print.Print()}"/>
-                            <Button Content="导出Excel" Click="{m:Exp Str=toExcel.ToExcel()}" />
-                            <!--Button Content="导出Excel" Click="{m:Exp Str=excel.Export()}"	toolkit:DockPanel.Dock="Right" Background="white" Grid.Column="7" Grid.Row="3"/-->
-
-                            <c:Excel Name="toExcel" HQL="{m:Exp Str=$\{daninfos.ItemsSource.HQL\}}" 
-   							 Completed="{m:Exp Str=downLoad.Down()}"
-   							 Path="{m:Exp Str=$\{server.BaseAddress\}/excel/\{daninfos.ItemsSource.Count\}/f_userid:用户编号|f_username:用户姓名|f_address:地址|f_districtname:小区名称|f_apartment:门牌号|f_cardid:卡号|f_gasprice:气价|f_pregas:气量|f_preamount:金额|f_zhinajin:违约金|f_grossproceeds:充值|f_cardfees:发卡费|f_payfeevalid:是否有效|f_sgnetwork:网点|f_sgoperator:操作员|f_invoicenum:发票号|f_deliverydate:收费日期|f_usertype:用户类型|f_gaswatchbrand:气表品牌|f_gaspricetype:气价类型|f_beginfee:维护费起始日期|f_endfee:维护费截止日期|f_amountmaintenance:维护费|f_payment:付款方式|f_zhye:上期余额|f_benqizhye:本期余额|f_invoicenum:发票号|f_payfeetype:收费类型|f_filiale:所属公司|f_comtype:公司类型|f_deliverytime:交费时间|id:序号$}"/>
-                            <c:DownLoad x:Name="downLoad" Path="{m:Exp Str=$\{server.BaseAddress\}/file/\{toExcel.FileName\}}" Filter="(*.xls)|*.xls"></c:DownLoad>
-
-
-
+                            <Button Content="打印汇总" Click="{m:Exp Str=print1.Print()}"/>
+                            <Button Content=" 置  空"  Click="{m:Exp Str=daninfosearch.DataContext.f_userid\=null;daninfosearch.DataContext.f_cardid\=null;daninfosearch.DataContext.f_username\=null;daninfosearch.DataContext.f_yytdate1\=null;daninfosearch.DataContext.f_yytdate2\=null;tj5.SelectedValue\=null;tj6.SelectedValue\=null;tj9.SelectedValue\=null;tja.SelectedValue\=null;tjb.SelectedValue\=null;tjc.SelectedValue\=null;tjwangdian.SelectedValue\=null;tjczy.SelectedValue\=null;tjczy_Copy.SelectedValue\=null;daninfosearch.DataContext.startinvoicenum\=null;daninfosearch.DataContext.endinvoicenum\=null;daninfosearch.DataContext.f_districtname\=null;tja_Copy.SelectedValue\=null;tjc_Copy.SelectedValue\=null}" FontSize="14" HorizontalAlignment="Left" Width="60" />
                         </StackPanel>
                         <TextBlock TextWrapping="Wrap" Text="气表品牌：" Grid.Column="2"  Margin="0,2,0,1" Height="25" TextAlignment="Right" />
                         <ComboBox Name="tj5" SelectedValue="{m:Bind Path=f_gaswatchbrand}" Grid.Column="3" ItemsSource="{m:Exp Str=qblistnull}"  Margin="0,2,0,1" DisplayMemberPath="name" SelectedValuePath="name"  Height="25">
@@ -207,7 +204,7 @@
                         <TextBlock TextWrapping="Wrap" Text="小区名称：" Grid.Column="8"  Margin="9,3,0,0" Height="25" TextAlignment="Right" Grid.Row="2" HorizontalAlignment="Left" Width="80" />
                         <TextBox x:Name="tjwhf_Copy" TextWrapping="Wrap" Grid.Row="2" Grid.Column="8" Text="{m:Bind Path=f_districtname}" Width="150" Margin="89,3,0,0" Height="25" Grid.ColumnSpan="1" VerticalAlignment="Stretch" HorizontalAlignment="Left" >
                             <a:Data.Prop>
-                                <o:PropertySetter PropertyName="f_districtname"  Operator="f_districtname like '%this%'"/>
+                                <o:PropertySetter PropertyName="f_districtname"  Operator="f_districtname = 'this'"/>
                             </a:Data.Prop>
                         </TextBox>
                         <ComboBox x:Name="tjc_Copy"  SelectedValue="{m:Bind Path=f_payment}" Grid.Row="3" Grid.Column="5" ItemsSource="{m:Exp Str=fukuanfangshinull}"  Margin="0" DisplayMemberPath="name" SelectedValuePath="name"  Height="25" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" Width="Auto">
@@ -215,107 +212,64 @@
                                 <o:PropertySetter PropertyName="f_payment"  Operator="f_payment = 'this'"/>
                             </a:Data.Prop>
                         </ComboBox>
+                        <ComboBox x:Name="tja_Copy"  SelectedValue="{m:Bind Path=f_gasproperties}" Grid.Row="3" Grid.Column="7" ItemsSource="{m:Exp Str=f_gaspropertieslistnull}"  Margin="0,2,0,1" DisplayMemberPath="name" SelectedValuePath="name"  Height="25" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" Width="Auto" VerticalAlignment="Stretch">
+                            <a:Data.Prop>
+                                <o:PropertySetter PropertyName="f_gasproperties"  Operator="f_gasproperties = 'this'"/>
+                            </a:Data.Prop>
+                        </ComboBox>
+                        <TextBlock TextWrapping="Wrap" Text="用气性质：" Grid.Column="6"  Margin="0,27,0,4" Height="25" TextAlignment="Right" Grid.Row="2" Grid.RowSpan="2" />
                     </Grid>
 
                     <toolkit:DockPanel   Background="#FFC3E4FD" toolkit:DockPanel.Dock="Bottom" Height="51">
-                        <sdk:DataPager x:Name="pager2" Source="{Binding ItemsSource.Count, Converter={StaticResource DataPagerConverter}, ElementName=daninfos}" Margin="0,0,0,0" PageSize="31" toolkit:DockPanel.Dock="Top" Height="24"   />
-                        <TextBlock TextWrapping="Wrap"  Margin="0,0,5,0" Text="{m:Exp Str=$共\{daninfos.ItemsSource.Count\}项 总气量\{daninfos.ItemsSource.f_pregas\} 应收金额\{daninfos.ItemsSource.f_preamount\}元  实收金额\{daninfos.ItemsSource.f_grossproceeds\}元 违约金\{daninfos.ItemsSource.f_zhinajin\}元}"   Foreground="#FF140000" Width="901" toolkit:DockPanel.Dock="Bottom" Height="25" HorizontalAlignment="Right" TextAlignment="Right" />
+                        <sdk:DataPager x:Name="pager2" Source="{Binding ItemsSource.Count, Converter={StaticResource DataPagerConverter}, ElementName=daninfos}" Margin="0,0,0,0" PageSize="42" toolkit:DockPanel.Dock="Top" Height="24"   />
+                        
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"/>
                     </toolkit:DockPanel>
 
                     <sdk:DataGrid x:Name="daninfos" Margin="0,0,0,3"   IsReadOnly="True"
 								AutoGenerateColumns="False" Width="Auto" Background="{x:Null}" >
                         <a:Data.Items>
-                            <!--o:PagedObjectList x:Name="daninfoslist" WebClientInfo="{StaticResource dbclient}"
-									
-MultiPath="{m:Exp Str=LoginUser.f_fengongsi \=\= zonggongsi.value:$from t_sellinggas where \{daninfosearch.DataContext.Condition\} $\, LoginUser.f_fengongsi \!\= zonggongsi.value:$from t_sellinggas where \{daninfosearch.DataContext.Condition\} and f_filiale \=\'\{LoginUser.f_fengongsi\}\' $\,$abc$}"
-									
-Path="{m:Exp Str=
-LoginUser.f_fengongsi \=\= zonggongsi.value:$from t_sellinggas where \{daninfosearch.DataContext.Condition\} order by  id$\, 
-LoginUser.f_fengongsi \!\= zonggongsi.value:$from t_sellinggas where \{daninfosearch.DataContext.Condition\} and f_filiale \=\'\{LoginUser.f_fengongsi\}\' order by id$\,$abc$}"
-										 PageIndex="{m:Exp Str=pager2.PageIndex}" PageSize="{m:Exp Str=pager2.PageSize}" SumNames=","/-->
-                            <!--o:PagedObjectList x:Name="daninfoslist" WebClientInfo="{StaticResource dbclient}"
-									
-Path="{m:Exp Str=LoginUser.f_fengongsi \=\= zonggongsi.value:$from t_sellinggas where \{daninfosearch.DataContext.Condition\} $\, LoginUser.f_fengongsi \!\= zonggongsi.value:$from t_sellinggas where \{daninfosearch.DataContext.Condition\} and f_filiale \=\'\{LoginUser.f_fengongsi\}\' $\,$abc$}"
-									
-									 PageIndex="{m:Exp Str=pager2.PageIndex}" PageSize="{m:Exp Str=pager2.PageSize}" SumNames=","/-->
+                      
                             <o:PagedList x:Name="daninfoslist" WebClientInfo="{StaticResource dbclient}"
 									LoadOnPathChanged="False" IsOld="{m:Exp Str='dansearchbutton=>Click!=null'}"
-									Names="f_userid,f_username,f_address,f_districtname,f_apartment,f_cardid,f_gasprice,f_pregas,f_zhinajin,f_preamount,f_grossproceeds,f_cardfees,f_payfeevalid,f_sgnetwork,f_sgoperator,f_deliverydate,f_usertype,f_gaswatchbrand,f_gaspricetype,f_beginfee,f_endfee,f_amountmaintenance,f_payment,f_totalcost,f_zhye,f_benqizhye,f_invoicenum,f_payfeetype,f_filiale,f_comtype,f_deliverytime,id,dates,f_stardate,f_enddate,f_stair1amount,f_stair1fee,f_stair1price,f_stair2amount,f_stair2fee,f_stair2price,f_stair3amount,f_stair3fee,f_stair3price,f_stair4amount,f_stair4fee,f_stair1price"
-									SumHQL="{m:Exp Str=$
-                                    select f_userid\,f_username\,f_address\,f_districtname\,f_apartment\,f_cardid\,f_gasprice\,f_pregas\,f_zhinajin\,  f_preamount\,  f_grossproceeds\,f_cardfees\,f_payfeevalid\,f_sgnetwork\,f_sgoperator\,CONVERT(varchar(12)\, f_deliverydate\, 111 ) f_deliverydate\,f_usertype\,f_gaswatchbrand\,f_gaspricetype\,CONVERT(varchar(12)\, f_beginfee\, 111 ) f_beginfee\,CONVERT(varchar(12)\, f_endfee\, 111 ) f_endfee\,f_amountmaintenance\,f_payment\,f_totalcost\,f_zhye\,f_benqizhye\,f_invoicenum\,f_payfeetype\,f_filiale\,f_comtype\,CONVERT(varchar(8)\, f_deliverytime\, 108 ) f_deliverytime\,id\,CONVERT(varchar(100)\, dates) dates\,
-                                    f_stardate\,f_enddate\,f_stair1amount\,f_stair1fee\,f_stair1price\,f_stair2amount\,f_stair2fee\,f_stair2price\,f_stair3amount\,f_stair3fee\,f_stair3price\,f_stair4amount\,f_stair4fee\,f_stair4price
-                                     from t_sellinggas s 
-                                     left join (select DISTINCT  f_sellid\,(select substring(convert(varchar(50)\,lastinputdate\,120)\,1\,7)+\'\,\' from t_handplan a where a.f_sellid\=b.f_sellid for xml path(\'\')) as dates from t_handplan b where f_sellid is not null) h on s.id \= h.f_sellid
-                                     where \{daninfosearch.DataContext.Condition\}  
+									Names="{m:Exp Str=$f_username\,f_districtname\,f_apartment\,f_cardid\,f_givecarddate\,f_linkname\,f_phone\,f_usertype\,f_gasprice\,f_userid\,num\,pregas\,totalcost$}"
+									SumHQL="{m:Exp Str=$select f_username\,f_districtname\,f_apartment\,f_cardid\,f_givecarddate\,f_linkname\,
+                                f_phone\,f_usertype\,f_gasprice\,f_userid\,count\(num\) num\,sum\(pregas\) pregas\,sum\(totalcost\) totalcost
+                                from \(select t2.f_username\,t2.f_districtname\,t2.f_gaswatchbrand\,t2.f_gasproperties\,t2.f_gaspricetype\,t1.f_sgnetwork\,t2.f_apartment\,t2.f_cardid\,t2.f_givecarddate\,t2.f_linkname\,
+                                t2.f_phone\,t2.f_usertype\,t2.f_gasprice\,t2.f_userid\,t1.num\,t1.pregas\,t1.totalcost\,t1.f_deliverydate 
+                                from t_userfiles t2 LEFT JOIN \(SELECT id num\,f_userid\,ISNULL\(f_pregas\,0\) pregas\,f_gaswatchbrand\,
+                                ISNULL\(f_totalcost\,0\) totalcost\,f_sgnetwork\,f_deliverydate FROM t_sellinggas) 
+                                t1 ON t1.f_userid\=t2.f_userid\) t where \{daninfosearch.DataContext.Condition\}  
+                                group by f_username\,f_districtname\,f_apartment\,f_cardid\,f_givecarddate\,f_linkname\,f_phone\,
+                                f_usertype\,f_gasprice\,f_userid
                                     }"
 									HQL="{m:Exp Str=$
-                                    select f_userid\,f_username\,f_address\,f_districtname\,f_apartment\,f_cardid\,f_gasprice\,f_pregas\,f_zhinajin\,f_preamount\, f_grossproceeds\,f_cardfees\,f_payfeevalid\,f_sgnetwork\,f_sgoperator\,CONVERT(varchar(12)\, f_deliverydate\, 111 ) f_deliverydate\,f_usertype\,f_gaswatchbrand\,f_gaspricetype\,CONVERT(varchar(12)\, f_beginfee\, 111 ) f_beginfee\,CONVERT(varchar(12)\, f_endfee\, 111 ) f_endfee\,f_amountmaintenance\,f_payment\,f_totalcost\,f_zhye\,f_benqizhye\,f_invoicenum\,f_payfeetype\,f_filiale\,f_comtype\,CONVERT(varchar(8)\, f_deliverytime\, 108 ) f_deliverytime\,id\,CONVERT(varchar(100)\, dates) dates\, 
-                                     f_stardate\,f_enddate\,f_stair1amount\,f_stair1fee\,f_stair1price\,f_stair2amount\,f_stair2fee\,f_stair2price\,f_stair3amount\,f_stair3fee\,f_stair3price\,f_stair4amount\,f_stair4fee\,f_stair4price
-                                    from t_sellinggas s 
-                                     left join (select DISTINCT  f_sellid\,(select substring(convert(varchar(50)\,lastinputdate\,120)\,1\,7)+\'\,\' from t_handplan a where a.f_sellid\=b.f_sellid for xml path(\'\')) as dates from t_handplan b where f_sellid is not null) h on s.id \= h.f_sellid
-                                    where \{daninfosearch.DataContext.Condition\}  
-                                    order by f_deliverydate asc
+                                   select f_username\,f_districtname\,f_apartment\,f_cardid\,f_givecarddate\,f_linkname\,f_phone\,f_usertype\,
+                                f_gasprice\,f_userid\,count\(num\) num\,sum\(pregas\) pregas\,sum\(totalcost\) totalcost 
+                                from \(select t2.f_username\,t2.f_districtname\,t2.f_apartment\,t2.f_cardid\,t2.f_givecarddate\,
+                                t2.f_linkname\,t2.f_phone\,t2.f_usertype\,t2.f_gasprice\,t2.f_gaswatchbrand\,t2.f_gasproperties\,t2.f_gaspricetype\,t1.f_sgnetwork\,t2.f_userid\,t1.num\,t1.pregas\,t1.totalcost\,
+                                t1.f_deliverydate from t_userfiles t2 LEFT JOIN \(SELECT id num\,f_userid\,ISNULL\(f_pregas\,0\) pregas\,f_gaswatchbrand\,
+                                ISNULL\(f_totalcost\,0\) totalcost\,f_sgnetwork\,f_deliverydate FROM t_sellinggas ) t1 
+                                ON t1.f_userid\=t2.f_userid\) t where \{daninfosearch.DataContext.Condition\}  
+                                group by f_username\,f_districtname\,f_apartment\,f_cardid\,f_givecarddate\,f_linkname\,
+                                f_phone\,f_usertype\,f_gasprice\,f_userid
+                                    order by f_userid desc
                                     }"
  
-									Path="sql" PageIndex="{m:Exp Str=pager2.PageIndex}" PageSize="{m:Exp Str=pager2.PageSize}" SumNames="f_pregas,f_preamount,f_grossproceeds,f_zhinajin"/>
+									Path="sql" PageIndex="{m:Exp Str=pager2.PageIndex}" PageSize="{m:Exp Str=pager2.PageSize}" SumNames="pregas,totalcost"/>
                         </a:Data.Items>
                         <sdk:DataGrid.Columns>
-                            <!--sdk:DataGridTextColumn d:IsLocked="True" Header="序  号" Binding="{Binding Index}"/-->
-
+                            <sdk:DataGridTextColumn d:IsLocked="True" Header="序  号" Binding="{Binding Index}"/>
+                            <sdk:DataGridTextColumn Header="用户名"	  Binding="{Binding f_username}"/>
+                            <sdk:DataGridTextColumn Header="小区名" Binding="{Binding f_districtname}"/>
                             <sdk:DataGridTextColumn Header="用户编号" Binding="{Binding f_userid}"/>
-                            <sdk:DataGridTextColumn d:IsLocked="True" Header="用户姓名" Binding="{Binding f_username}"/>
-                            <sdk:DataGridTextColumn Header="地址" Binding="{Binding f_address}"/>
-                            <sdk:DataGridTextColumn Header="小区名称" Binding="{Binding f_districtname}"/>
-                            <sdk:DataGridTextColumn Header="门牌号" Binding="{Binding f_apartment}"/>
-
-                            <sdk:DataGridTextColumn Header="卡号" Binding="{Binding f_cardid}"/>
-                            <sdk:DataGridTextColumn Header="气价" Binding="{Binding f_gasprice}"/>
-                            <sdk:DataGridTextColumn Header="气量" Binding="{Binding f_pregas}"/>
-                            <sdk:DataGridTextColumn Header="金额" Binding="{Binding f_preamount}"/>
-                            <sdk:DataGridTextColumn Header="违约金" Binding="{Binding f_zhinajin}"/>
-                            <sdk:DataGridTextColumn Header="充值" Binding="{Binding f_grossproceeds}"/>
-                            <sdk:DataGridTextColumn Header="发卡费" Binding="{Binding f_cardfees}"/>
-                            <sdk:DataGridTextColumn Header="是否有效" Binding="{Binding f_payfeevalid}"/>
-                            <sdk:DataGridTextColumn Header="网点" Binding="{Binding f_sgnetwork}"/>
-                            <sdk:DataGridTextColumn Header="操作员" Binding="{Binding f_sgoperator}"/>
-                            <sdk:DataGridTextColumn Header="发票号" Binding="{Binding f_invoicenum}"/>
-                            <sdk:DataGridTextColumn Header="收费日期" Binding="{Binding f_deliverydate,StringFormat=yyyy-MM-dd}"/>
-
-
-
-
+                            <sdk:DataGridTextColumn Header="IC卡号" Binding="{Binding f_cardid}"/>
+                            <sdk:DataGridTextColumn Header="联系人" Binding="{Binding f_linkname}"/>
+                            <sdk:DataGridTextColumn Header="联系电话" Binding="{Binding f_phone}"/>
                             <sdk:DataGridTextColumn Header="用户类型" Binding="{Binding f_usertype}"/>
-
-
-                            <sdk:DataGridTextColumn Header="气表品牌" Binding="{Binding f_gaswatchbrand}"/>
-                            <sdk:DataGridTextColumn Header="气价类型" Binding="{Binding f_gaspricetype}"/>
-                            <sdk:DataGridTextColumn Header="维护费起始日期" Binding="{Binding f_beginfee,StringFormat=yyyy-MM}"/>
-                            <sdk:DataGridTextColumn Header="维护费截止日期" Binding="{Binding f_endfee,StringFormat=yyyy-MM}"/>
-                            <sdk:DataGridTextColumn Header="维护费" Binding="{Binding f_amountmaintenance}"/>
-                            <sdk:DataGridTextColumn Header="付款方式" Binding="{Binding f_payment}"/>
-                            <sdk:DataGridTextColumn Header="上期余额" Binding="{Binding f_zhye}"/>
-                            <sdk:DataGridTextColumn Header="本期余额" Binding="{Binding f_benqizhye}"/>
-                            <sdk:DataGridTextColumn Header="收费类型" Binding="{Binding f_payfeetype}"/>
-                            <sdk:DataGridTextColumn Header="所属公司" Binding="{Binding f_filiale}"/>
-                            <sdk:DataGridTextColumn Header="公司类型" Binding="{Binding f_comtype}"/>
-                            <sdk:DataGridTextColumn Header="交费时间" Binding="{Binding f_deliverytime,StringFormat=hh:mm:ss tt}"/>
-                            <sdk:DataGridTextColumn Header="id" Binding="{Binding id}"/>
-                            <sdk:DataGridTextColumn Header="抄表月份" Binding="{Binding dates}"/>
-                            <sdk:DataGridTextColumn Header="阶段开始日期" Binding="{Binding f_stardate}"/>
-                            <sdk:DataGridTextColumn Header="阶段结束日期" Binding="{Binding f_enddate}"/>
-                            <sdk:DataGridTextColumn Header="阶梯一气量" Binding="{Binding f_stair1amount}"/>
-                            <sdk:DataGridTextColumn Header="阶梯一金额" Binding="{Binding f_stair1fee}"/>
-                            <sdk:DataGridTextColumn Header="阶梯一单价" Binding="{Binding f_stair1price}"/>
-                            <sdk:DataGridTextColumn Header="阶梯二气量" Binding="{Binding f_stair2amount}"/>
-                            <sdk:DataGridTextColumn Header="阶梯二金额" Binding="{Binding f_stair2fee}"/>
-                            <sdk:DataGridTextColumn Header="阶梯二单价" Binding="{Binding f_stair2price}"/>
-                            <sdk:DataGridTextColumn Header="阶梯三气量" Binding="{Binding f_stair3amount}"/>
-                            <sdk:DataGridTextColumn Header="阶梯三金额" Binding="{Binding f_stair3fee}"/>
-                            <sdk:DataGridTextColumn Header="阶梯三单价" Binding="{Binding f_stair3price}"/>
-                            <sdk:DataGridTextColumn Header="阶梯四气量" Binding="{Binding f_stair4amount}"/>
-                            <sdk:DataGridTextColumn Header="阶梯四金额" Binding="{Binding f_stair4fee}"/>
-                            <sdk:DataGridTextColumn Header="阶梯四单价" Binding="{Binding f_stair4price}"/>
+                            <sdk:DataGridTextColumn Header="购气次数" Binding="{Binding num}"/>
+                            <sdk:DataGridTextColumn Header="购气量" Binding="{Binding pregas}"/>
+                            <sdk:DataGridTextColumn Header="购气金额" Binding="{Binding totalcost}"/>
                         </sdk:DataGrid.Columns>
                     </sdk:DataGrid>
 
@@ -328,26 +282,19 @@ Path="{m:Exp Str=LoginUser.f_fengongsi \=\= zonggongsi.value:$from t_sellinggas 
 
         </Grid>
         <c:PrintPageObj x:Name="print" ListNameInArea="selllist" Area="{m:Res Key=sqprint1}" 
-      List="{m:Exp Str=daninfos.ItemsSource}" PageRow="31"  />
+      List="{m:Exp Str=daninfos.ItemsSource}" PageRow="42"  />
+        <!--c:PrintPageObj x:Name="print1" ListNameInArea="selllist2" Area="{m:Res Key=sqprint2}" 
+      List="{m:Exp Str=daninfos.ItemsSource}" PageRow="42"  /-->
+        <c:PrintObj x:Name="print1" Area="{m:Res Key=sqprint2}" ></c:PrintObj>
 
-        <Grid  x:Name="sqprint1" VerticalAlignment="Bottom" Margin="-1355,0,0,25"   HorizontalAlignment="Left" Width="1227" >
+        <Grid  x:Name="sqprint1" VerticalAlignment="Bottom" Margin="-1355,0,0,25"  HorizontalAlignment="Left" Width="1227" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
+               
                 <RowDefinition Height="0.942*"/>
             </Grid.RowDefinitions>
-            <!--sdk:Label HorizontalAlignment="Left" Content="日期范围：" Grid.Row="0" Height="25" Width="80"></>
-            <sdk:Label HorizontalAlignment="Left" Content="{m:Exp Str=daninfosearch.DataContext.f_yytdate1}" Grid.Row="0" Width="70" Margin="100,0,0,0"></sdk:Label>
-            <sdk:Label HorizontalAlignment="Left" Content="{m:Exp Str=daninfosearch.DataContext.f_yytdate}" Grid.Row="0" Width="80" Margin="350,0,0,0"></sdk:Label>
-            <sdk:Label HorizontalAlignment="Left" Content="到：" Margin="300,3,0,2" Grid.Row="0" Height="25" Width="36"></sdk:Label-->
-
-            <sdk:Label HorizontalAlignment="Left" Grid.Row="0" Content="总记录数:" Height="24"   VerticalAlignment="Bottom" Width="105" Margin="2,0,0,4"/>
-            <sdk:Label HorizontalAlignment="Left" Content="{m:Exp Str=daninfos.ItemsSource.Count}"  Grid.Row="0" Height="24" Margin="111,0,0,4" VerticalAlignment="Bottom" Width="90"/>
-            <sdk:Label HorizontalAlignment="Left" Grid.Row="0" Content="总购气量:" Height="24" Margin="207,0,0,4" VerticalAlignment="Bottom" Width="68"/>
-            <sdk:Label HorizontalAlignment="Left" Grid.Row="0"  Content="{m:Exp Str=daninfos.ItemsSource.f_pregas}" Height="24" Margin="275,0,0,4" VerticalAlignment="Bottom" Width="145"/>
-            <sdk:Label Grid.Row="0" Content="总金额 :" Height="24" Margin="432,0,0,4" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="55"/>
-            <sdk:Label Grid.Row="0"  Height="24" Content="{m:Exp Str=daninfos.ItemsSource.f_grossproceeds}" Margin="491,0,0,3" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="294"/>
-
-            <sdk:DataGrid x:Name="selllist" Height="1447" AutoGenerateColumns="False" Style="{StaticResource DataGridPrintStyle}" FontSize="11"  Grid.Row="1" VerticalAlignment="Top" Margin="0,0,0,-1621" >
+           
+            <sdk:DataGrid x:Name="selllist" AutoGenerateColumns="False" Style="{StaticResource DataGridPrintStyle}" FontSize="11"  Grid.Row="1" VerticalAlignment="Top" >
                 <sdk:DataGrid.Columns>
                     <sdk:DataGridTemplateColumn Header=" " d:IsLocked="True" >
                         <sdk:DataGridTemplateColumn.CellTemplate>
@@ -356,20 +303,37 @@ Path="{m:Exp Str=LoginUser.f_fengongsi \=\= zonggongsi.value:$from t_sellinggas 
                             </DataTemplate>
                         </sdk:DataGridTemplateColumn.CellTemplate>
                     </sdk:DataGridTemplateColumn>
+                    <sdk:DataGridTextColumn d:IsLocked="True" Header="序  号" Binding="{Binding Index}"/>
+                    <sdk:DataGridTextColumn Header="用户名"	  Binding="{Binding f_username}"/>
+                    <sdk:DataGridTextColumn Header="小区名" Binding="{Binding f_districtname}"/>
                     <sdk:DataGridTextColumn Header="用户编号" Binding="{Binding f_userid}"/>
-                    <sdk:DataGridTextColumn d:IsLocked="True" Header="用户姓名" Binding="{Binding f_username}"/>
-                    <sdk:DataGridTextColumn Header="地址" Binding="{Binding f_address}"/>
-                    <sdk:DataGridTextColumn Header="气价" Binding="{Binding f_gasprice}"/>
-                    <sdk:DataGridTextColumn Header="气量" Binding="{Binding f_pregas}"/>
-                    <sdk:DataGridTextColumn Header="金额" Binding="{Binding f_preamount}"/>
-         
-                    <sdk:DataGridTextColumn Header="发卡费" Binding="{Binding f_cardfees}"/>
-                    <sdk:DataGridTextColumn Header="操作员" Binding="{Binding f_sgoperator}"/>
-                    <sdk:DataGridTextColumn Header="收费日期" Binding="{Binding f_deliverydate,StringFormat=yyyy-MM-dd}"/>
+                    <sdk:DataGridTextColumn Header="用户类型" Binding="{Binding f_usertype}"/>
+                    <sdk:DataGridTextColumn Header="购气次数" Binding="{Binding num}"/>
+                    <sdk:DataGridTextColumn Header="购气量" Binding="{Binding pregas}"/>
+                    <sdk:DataGridTextColumn Header="购气金额" Binding="{Binding totalcost}"/>
                 </sdk:DataGrid.Columns>
             </sdk:DataGrid>
 
         </Grid>
-
+        <Grid  x:Name="sqprint2" VerticalAlignment="Bottom" Margin="-1355,0,0,225"  HorizontalAlignment="Left" Width="1227" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="0.942*"/>
+            </Grid.RowDefinitions>
+            <sdk:Label HorizontalAlignment="Left" Content="日期范围：" Grid.Row="1" Height="25" Width="80"></sdk:Label>
+            <sdk:Label HorizontalAlignment="Left" Content="{m:Exp Str=daninfosearch.DataContext.f_yytdate1}" Grid.Row="1" Width="184" Margin="85,0,0,0"></sdk:Label>
+            <sdk:Label HorizontalAlignment="Left" Content="{m:Exp Str=daninfosearch.DataContext.f_yytdate2}" Grid.Row="1" Width="158" Margin="350,0,0,0"></sdk:Label>
+            <sdk:Label HorizontalAlignment="Left" Content="到：" Margin="300,3,0,2" Grid.Row="1" Height="25" Width="36"></sdk:Label>
+            
+            <sdk:Label HorizontalAlignment="Left" Grid.Row="2" Content="总记录数:" Height="24"   VerticalAlignment="Bottom" Width="105" Margin="2,0,0,4"/>
+            <sdk:Label HorizontalAlignment="Left" Content="{m:Exp Str=daninfos.ItemsSource.Count}"  Grid.Row="2" Height="24" Margin="111,0,0,4" VerticalAlignment="Bottom" Width="90"/>
+            <sdk:Label HorizontalAlignment="Left" Grid.Row="2" Content="总购气量:" Height="24" Margin="207,0,0,4" VerticalAlignment="Bottom" Width="68"/>
+            <sdk:Label HorizontalAlignment="Left" Grid.Row="2"  Content="{m:Exp Str=daninfos.ItemsSource.pregas}" Height="24" Margin="275,0,0,4" VerticalAlignment="Bottom" Width="145"/>
+            <sdk:Label Grid.Row="2" Content="总金额 :" Height="24" Margin="432,0,0,4" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="55"/>
+            <sdk:Label Grid.Row="2"  Height="24" Content="{m:Exp Str=daninfos.ItemsSource.totalcost}" Margin="491,0,0,3" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="294"/>
+            
+        </Grid>
     </Grid>
 </UserControl>

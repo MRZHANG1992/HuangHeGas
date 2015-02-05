@@ -129,12 +129,12 @@
 							</a:Data.Prop>
 						</TextBox>
 						<Button Content="置  空" x:Name="zhikong" Grid.Column="2" Grid.Row="3" Click="{m:Exp Str=fpinfossearch.DataContext.f_repairfee\=null;fpinfossearch.DataContext.startinvoicenum\=null;fpinfossearch.DataContext.endinvoicenum\=null;fpinfossearch.DataContext.f_fapiaodate\=null;fpinfossearch.DataContext.f_fapiaodate2\=null;Comboxfx.SelectedValue\=null;fpzt.SelectedValue\=null;wangdian.SelectedValue\=null}" Margin="0,-2,12,1" HorizontalAlignment="Right" Width="50" FontSize="14"  />
-						<TextBlock TextWrapping="Wrap" Text="工号" Margin="10,1,0,2" Height="25" Grid.Column="2" HorizontalAlignment="Left" Width="95" TextAlignment="Right" Grid.Row="3"/>
+						<!--TextBlock TextWrapping="Wrap" Text="工号" Margin="10,1,0,2" Height="25" Grid.Column="2" HorizontalAlignment="Left" Width="95" TextAlignment="Right" Grid.Row="3"/>
 						<TextBox TextWrapping="Wrap" Grid.Column="2" Text="{m:Bind Path=f_sgoperator}" a:ControlAttach.DefaultButton="searchbutton" Width="72" Margin="105,1,0,2" Height="25" VerticalAlignment="Stretch" Grid.Row="3" HorizontalAlignment="Left" >
 							<a:Data.Prop>
 								<o:PropertySetter PropertyName="f_sgoperator" Operator="f_sgoperator = 'this'"/>               
 							</a:Data.Prop>
-						</TextBox>
+						</TextBox-->
 					</Grid>
 				</toolkit:DockPanel>
 				<toolkit:DockPanel   Background="#FFC3E4FD" toolkit:DockPanel.Dock="Bottom"  Height="51">
@@ -151,7 +151,7 @@
 						</a:Data.Items-->
 						<a:Data.Items>
 							<o:ObjectList x:Name="fpinfoslist" WebClientInfo="{StaticResource dbclient}"
-                                Path="{m:Exp Str=LoginUser.f_fengongsi \=\= zonggongsi.value:$from t_fapiaoinfos where \{fpinfossearch.DataContext.Condition\} and f_sgoperator\=\'\{LoginUser.name\}\'$\, LoginUser.f_fengongsi \!\= zonggongsi.value:$from t_fapiaoinfos where \{fpinfossearch.DataContext.Condition\} and f_sgoperator\=\'\{LoginUser.name\}\' and f_filiale \=\'\{LoginUser.f_fengongsi\}\'$\,$abc$}"
+                                Path="{m:Exp Str=LoginUser.f_fengongsi \=\= zonggongsi.value:$from t_fapiaoinfos where \{fpinfossearch.DataContext.Condition\}$\, LoginUser.f_fengongsi \!\= zonggongsi.value:$from t_fapiaoinfos where \{fpinfossearch.DataContext.Condition\}  and f_filiale \=\'\{LoginUser.f_fengongsi\}\'$\,$abc$}"
 								IsOld="{m:Exp Str='SaveAction.State\=\=$End$'}"
 								/>
 						</a:Data.Items>

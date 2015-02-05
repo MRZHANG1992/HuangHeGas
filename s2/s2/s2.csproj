@@ -101,7 +101,7 @@
     </Reference>
     <Reference Include="System.Windows.Controls.Navigation, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Controls.Toolkit">
-      <HintPath>..\..\..\restV2\s2\dlls\System.Windows.Controls.Toolkit.dll</HintPath>
+      <HintPath>E:\workspace 3.5\restV2\s2\dlls\System.Windows.Controls.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Toolkit.Internals">
       <HintPath>..\dlls\System.Windows.Controls.Toolkit.Internals.dll</HintPath>
@@ -188,6 +188,9 @@
     <Compile Include="Pages\呼叫系统报表页面.xaml.cs">
       <DependentUpon>呼叫系统报表页面.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\售气收费报表.xaml.cs">
+      <DependentUpon>售气收费报表.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\大屏显示.xaml.cs">
       <DependentUpon>大屏显示.xaml</DependentUpon>
     </Compile>
@@ -232,6 +235,9 @@
     </Compile>
     <Compile Include="Pages\小区安检查询.xaml.cs">
       <DependentUpon>小区安检查询.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\张其进.xaml.cs">
+      <DependentUpon>张其进.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\抄表修改查询.xaml.cs">
       <DependentUpon>抄表修改查询.xaml</DependentUpon>
@@ -1437,6 +1443,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Pages\售气收费报表.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Pages\大屏显示.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1496,6 +1506,10 @@
     <Page Include="Pages\小区安检查询.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\张其进.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\抄表修改查询.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -3049,7 +3063,7 @@
     <Resource Include="icon\发票领用.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\restV2\s2\s2DLL\s2DLL.csproj">
+    <ProjectReference Include="..\..\..\..\NewWork\restV2\s2\s2DLL\s2DLL.csproj">
       <Project>{755bc4b3-86b8-4126-82c9-4f1bc5c8b07e}</Project>
       <Name>s2DLL</Name>
     </ProjectReference>
